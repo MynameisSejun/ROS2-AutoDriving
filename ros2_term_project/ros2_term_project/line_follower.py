@@ -1,6 +1,4 @@
 import rclpy
-from nav_msgs.msg import Odometry
-from rclpy import time
 from rclpy.node import Node
 from sensor_msgs.msg import Image, LaserScan
 from geometry_msgs.msg import Twist
@@ -39,35 +37,49 @@ class LineFollower(Node):
         self.img = None
         self.obstacle_detected = False  # 장애물 감지 상태
         self.stopped = False
-
-        self.stop_duration = 5.0  # 정지 후 대기 시간 (초)
+        self.stop_bool = True
 
     def image_callback(self, msg: Image):
-        if self.stopped:
-            # 차량이 정지 상태라면 데이터를 무시
-            return
-        try:
-            img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-            self.line_tracker.process(img)
-
-            if self.line_tracker.stop_detected:
-               self.line_stop()
-
-            # 조향 조정
-            self.twist.angular.z = (-1) * self.line_tracker.delta / 110  # 조향 비율 조정
+        if self.line_tracker.end_detected:
+            # 주행 종료 상태에서는 아무 작업도 하지 않음
+            self.get_logger().info("End detected: Stopping vehicle permanently.")
+            self.twist.linear.x = 0.0
+            self.twist.angular.z = 0.0
             self._publisher.publish(self.twist)
+            self.stopped = True
+            return
+        else:
+            if self.stopped:
+                # 차량이 정지 상태라면 데이터를 무시
+                return
 
-        except Exception as e:
-            raise
+            try:
+                img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+                self.line_tracker.process(img)
+
+                if self.line_tracker.stop_detected and self.stop_bool:
+                    self.line_stop()
+                    self.stop_bool = False
+                    self.create_timer(7.0, self.stop_bool_true)
+
+                # 조향 조정
+                self.twist.angular.z = (-1) * self.line_tracker.delta / 110  # 조향 비율 조정
+                self._publisher.publish(self.twist)
+
+            except Exception as e:
+                self.get_logger().error(f"Error in image_callback: {e}")
+                raise
 
     def lidar_callback(self, msg: LaserScan):
         try:
+            if self.line_tracker.end_detected:
+                return
+
             range_min = 0.5
             range_max = 8.0
 
             is_obstacle = any(range_min <= distance <= range_max for distance in msg.ranges if distance > 0)
 
-            # self.get_logger().info(f"stop_detected={self.line_tracker.stop_detected}")
             if not self.line_tracker.stop_detected:
                 if is_obstacle:
                     self.obstacle_detected = True
@@ -77,6 +89,7 @@ class LineFollower(Node):
                     self.resume()
 
         except Exception as e:
+            self.get_logger().error(f"Error in lidar_callback: {e}")
             raise
 
     def stop(self):
@@ -84,14 +97,18 @@ class LineFollower(Node):
         self.twist.linear.x = 0.0
         self.twist.angular.z = 0.0
         self._publisher.publish(self.twist)
-        self.get_logger().info("Vehicle stop")
+        self.get_logger().info("Vehicle stopped.")
 
     def resume(self):
+        if self.line_tracker.end_detected:
+            self.get_logger().info("Resume skipped: End detected.")
+            return
+
         # 차량 정지 해제 후 속도 재설정
         self.stopped = False
         self.twist.linear.x = 5.0  # 원래 설정된 속도로 복귀
         self._publisher.publish(self.twist)
-        self.get_logger().info("Vehicle run")
+        self.get_logger().info("Vehicle running.")
 
     def line_stop(self):
         self.twist.linear.x = 0.0
@@ -103,10 +120,9 @@ class LineFollower(Node):
         # 3초 후 resume 호출
         self.create_timer(5.0, self.resume)
 
-    def resume_driving(self):
-        self.get_logger().info("Resuming driving.")
-        self.resume()
-        self.stop_timer.cancel()  # 타이머 취소
+    def stop_bool_true(self):
+        self.stop_bool = True
+        self.get_logger().info("Stop_bool reset to True.")
 
     @property
     def publisher(self):
@@ -115,8 +131,7 @@ class LineFollower(Node):
 
 def main():
     rclpy.init()
-    # 런치 파일에서 'car_name' 파라미터로 자동차 이름을 받아옴
-    car_name = 'PR001'  # 예시로 PR001 사용, 실제로는 launch 파일에서 동적으로 설정할 것
+    car_name = 'PR002'  # 예시로 PR001 사용
 
     tracker = LineTracker()
     follower = LineFollower(tracker, car_name)

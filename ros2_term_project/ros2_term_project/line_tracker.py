@@ -11,7 +11,8 @@ class LineTracker(Node):
         self._delta = 0.0
         self._prev_left_cx = None  # 이전 왼쪽 차선 중심값
         self._prev_right_cx = None  # 이전 오른쪽 차선 중심값
-        self.stop_detected = False # 정지 상태 플래그
+        self.stop_detected = False  # 정지 상태 플래그
+        self.end_detected = False
         self.stop_callback = stop_callback
 
     def process(self, img: np.ndarray) -> None:
@@ -28,6 +29,11 @@ class LineTracker(Node):
             upper_stop_line = np.array([180, 30, 255])
             stop_line_mask = cv2.inRange(hsv, lower_stop_line, upper_stop_line)
 
+            # yellow_line
+            lower_yellow = np.array([20, 100, 100])
+            upper_yellow = np.array([30, 255, 255])
+            yellow_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+
             # line ROI
             h, w, _ = img.shape
             search_top = int(h / 3 * 1.8)
@@ -36,20 +42,38 @@ class LineTracker(Node):
             # stop_line ROI
             stop_line_top = int(h / 3 * 1.6)
             stop_line_bottom = int(h / 3 * 1.8)
-            # search_left = int(w / 8 * 3)
-            # search_right = int(w / 8 * 5)
             stop_line_mask[0:stop_line_top, :] = 0
             stop_line_mask[stop_line_bottom:h, :] = 0
-            # stop_line_mask[:, 0:search_left] = 0
-            # stop_line_mask[:, search_right:w] = 0
+
+            # yellow_line ROI
+            yellow_top = int(h / 3 * 1.6)
+            yellow_bottom = int(h / 3 * 1.8)
+
+            # 화면 중앙을 기준으로 yellow_left와 yellow_right 계산
+            center_x = w // 2  # 화면의 가로 중앙 좌표
+            roi_width = int(w / 4 * 0.4)  # ROI의 너비 (기존 비율에 맞게 조정)
+
+            yellow_left = center_x - roi_width // 2
+            yellow_right = center_x + roi_width // 2
+
+            # 마스킹 설정
+            yellow_mask[0:yellow_top, :] = 0
+            yellow_mask[yellow_bottom:h, :] = 0
+            yellow_mask[:, 0:yellow_left] = 0
+            yellow_mask[:, yellow_right:w] = 0
+
 
             # 정지선 흰색 픽셀 개수 계산
             white_pixel_count = cv2.countNonZero(stop_line_mask)
             # print(f"흰색 픽셀 개수: {white_pixel_count}")
-            if white_pixel_count > 3000:
+            if white_pixel_count > 4000:
                 self.stop_detected = True
             else:
                 self.stop_detected = False  # 상태 초기화는 LineFollower에서 관리
+
+            yellow_pixel_count = cv2.countNonZero(yellow_mask)
+            if yellow_pixel_count > 0:
+                self.end_detected = True
 
             # 차선의 모멘트 계산
             M = cv2.moments(mask)
@@ -92,6 +116,7 @@ class LineTracker(Node):
             cv2.imshow("Lane Detection", img)
             cv2.imshow("Mask", mask)
             cv2.imshow("Stop Line Mask", stop_line_mask)
+            cv2.imshow("yellow", yellow_mask)
             cv2.waitKey(3)
 
         except Exception as e:

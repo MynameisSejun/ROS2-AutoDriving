@@ -74,7 +74,64 @@
         <xyz>0 0 1</xyz>
       </axis>
     </joint>
-
+    <!-- hokuyo Laser -->
+<link name="hokuyo_link">
+	<pose>0 -2 1.2 0 0 -1.57</pose>
+	<inertial>
+		<ixx>1e-6</ixx>
+		<ixy>0</ixy>
+		<ixz>0</ixz>
+		<iyy>1e-6</iyy>
+		<iyz>0</iyz>
+		<izz>1e-6</izz>
+		<mass>1e-5</mass>
+	</inertial>
+	<collision name="laser_collision"> <!-- collision 이름 변경 -->
+		<pose>0 0 0.5 0 0 0</pose>
+		<geometry>
+			<box>
+				<size>0.1 0.1 0.1</size>
+			</box>
+		</geometry>
+	</collision>
+	<visual name="laser_visual"> <!-- visual 이름 변경 -->
+		<geometry>
+			<mesh>
+				<uri>model://hokuyo/meshes/hokuyo.dae</uri>
+			</mesh>
+		</geometry>
+	</visual>
+	<sensor name="custom_laser_sensor" type="gpu_ray"> <!-- sensor 이름 변경 -->
+		<pose>0.01 0 0.0175 0 -0 0</pose>
+		<ray>
+			<scan>
+				<horizontal>
+					<samples>320</samples>
+					<resolution>5</resolution>
+					<min_angle>-0.60</min_angle>
+					<max_angle>0.60</max_angle>
+				</horizontal>
+			</scan>
+			<range>
+				<min>0.08</min>
+				<max>10</max>
+				<resolution>0.2</resolution>
+			</range>
+		</ray>
+		<plugin name="custom_laser_plugin" filename="libgazebo_ros_ray_sensor.so"> <!-- plugin 이름 변경 -->
+			<ros>
+				<namespace>custom_laser_namespace</namespace> <!-- namespace 이름 변경 -->
+			    <remapping>~/out:=scan_custom</remapping> <!-- 토픽 remapping 변경 -->
+				<remapping>camera_info:=camera_info_custom</remapping> <!-- 토픽 remapping 변경 -->
+			</ros>
+			<frame_name>custom_laser_frame</frame_name> <!-- frame 이름 변경 -->
+			<output_type>sensor_msgs/LaserScan</output_type>
+		</plugin>
+		<always_on>1</always_on>
+		<update_rate>5</update_rate>
+		<visualize>1</visualize>
+	</sensor>
+</link>
     <plugin name='diff_drive2' filename='libgazebo_ros_ackermann_drive.so'>
 
         <ros>
