@@ -1,0 +1,28 @@
+[0.595s] Invoking command in '/home/ros2/Ros2Projects/oom_ws/src/ros2_term_project': PYTHONPATH=/home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/ros2_term_project build --build-base /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/build/ros2_term_project/build install --prefix /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project --record /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/build/ros2_term_project/install.log --single-version-externally-managed
+[0.791s] running egg_info
+[0.791s] writing build/ros2_term_project/ros2_term_project.egg-info/PKG-INFO
+[0.792s] writing dependency_links to build/ros2_term_project/ros2_term_project.egg-info/dependency_links.txt
+[0.792s] writing entry points to build/ros2_term_project/ros2_term_project.egg-info/entry_points.txt
+[0.792s] writing requirements to build/ros2_term_project/ros2_term_project.egg-info/requires.txt
+[0.792s] writing top-level names to build/ros2_term_project/ros2_term_project.egg-info/top_level.txt
+[0.829s] reading manifest file 'build/ros2_term_project/ros2_term_project.egg-info/SOURCES.txt'
+[0.830s] writing manifest file 'build/ros2_term_project/ros2_term_project.egg-info/SOURCES.txt'
+[0.830s] running build
+[0.830s] running build_py
+[0.830s] copying ros2_term_project/line_follower.py -> /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/build/ros2_term_project/build/lib/ros2_term_project
+[0.831s] running install
+[0.831s] running install_lib
+[0.832s] copying /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/build/ros2_term_project/build/lib/ros2_term_project/line_follower.py -> /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/python3.8/site-packages/ros2_term_project
+[0.833s] byte-compiling /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/python3.8/site-packages/ros2_term_project/line_follower.py to line_follower.cpython-38.pyc
+[0.834s] running install_data
+[0.835s] copying worlds/model1.sdf -> /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/share/ros2_term_project/worlds
+[0.835s] running install_egg_info
+[0.837s] removing '/home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/python3.8/site-packages/ros2_term_project-0.0.0-py3.8.egg-info' (and everything under it)
+[0.838s] Copying build/ros2_term_project/ros2_term_project.egg-info to /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/python3.8/site-packages/ros2_term_project-0.0.0-py3.8.egg-info
+[0.839s] running install_scripts
+[0.857s] Installing line_follower script to /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/ros2_term_project
+[0.857s] Installing move_box script to /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/ros2_term_project
+[0.858s] Installing spawn_prius script to /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/ros2_term_project
+[0.858s] Installing start script to /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/ros2_term_project
+[0.858s] writing list of installed files to '/home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/build/ros2_term_project/install.log'
+[0.876s] Invoked command in '/home/ros2/Ros2Projects/oom_ws/src/ros2_term_project' returned '0': PYTHONPATH=/home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/ros2_term_project build --build-base /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/build/ros2_term_project/build install --prefix /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/install/ros2_term_project --record /home/ros2/Ros2Projects/oom_ws/src/ros2_term_project/build/ros2_term_project/install.log --single-version-externally-managed

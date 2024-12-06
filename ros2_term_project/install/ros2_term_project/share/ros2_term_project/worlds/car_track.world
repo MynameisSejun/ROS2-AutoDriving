@@ -1,0 +1,252 @@
+<sdf version="1.6">
+  <world name="default">
+
+<!--
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+-->
+
+
+<model name="ground">
+      <pose>75 -41.8 0 0 0 1.57</pose>
+      <static>1</static>
+      <link name="ground">
+        <collision name="ground_coll">
+          <geometry>
+            <box>
+              <size>83.6 150 0.05</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name="ground_vis">
+          <geometry>
+            <box>
+              <size>83.6 150  0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri> ./course.material </uri>  <!-- file://course.material -->
+              <name>course</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <!-- 박스 -->
+    <model name="move_box">
+      <pose>37 -70 0.5 0 0 0</pose>
+      <link name="link_box">
+        <collision name="collision_box">
+          <geometry>
+            <box>
+              <size>2 2 2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual_box">
+          <geometry>
+            <box>
+              <size>2 2 2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <plugin name="ros_box_plugin" filename="libgazebo_ros_planar_move.so">
+        <ros>
+          <namespace>robot1</namespace>
+        </ros>
+        <update_rate>1000</update_rate>
+      </plugin>
+    </model>
+    <!-- 박스 -->
+    <!-- 사람 -->
+    <actor name="custom_actor">
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <pose>127.0 -44.0 0 0 0 0</pose>
+      <animation name="custom_walk_animation">
+        <filename>walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <delay_start>0.000000</delay_start>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="custom_walk_animation" tension="0.6">
+          <waypoint>
+            <time>0.000000</time>
+            <pose>127.0 -42.0 0 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>2.000000</time>
+            <pose>129.2 -42.0 0 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>4.000000</time>
+            <pose>131.4 -42.0 0 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>5.000000</time>
+            <pose>132.5 -42.0 0 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>6.000000</time>
+            <pose>133.6 -42.0 0 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>10.000000</time>
+            <pose>138.0 -42.0 0 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>11.000000</time>
+            <pose>138.0 -42.0 0 0 0 -3.0</pose>
+          </waypoint>
+          <waypoint>
+            <time>12.000000</time>
+            <pose>137.0 -42.0 0 0 0 -3.0</pose>
+          </waypoint>
+          <waypoint>
+            <time>13.000000</time>
+            <pose>136.0 -42.0 0 0 0 -3.0</pose>
+          </waypoint>
+          <waypoint>
+            <time>15.000000</time>
+            <pose>133.0 -42.0 0 0 0 -3.0</pose>
+          </waypoint>
+          <waypoint>
+            <time>20.700000</time>
+            <pose>127.0 -42.0 0 0 0 -3.0</pose>
+          </waypoint>
+          <waypoint>
+            <time>22.000000</time>
+            <pose>127.0 -42.0 0 0 0 0</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+    <!-- 사람 -->
+     <model name="hill_1">
+      <pose>85 -70.17 0.4 0 -0.1747 0</pose>
+      <static>1</static>
+      <link name="cube_link">
+        <collision name="cube_coll">
+          <geometry>
+            <box>
+              <size>10 9.3230 1</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name="cube_vis">
+          <geometry>
+            <box>
+              <size>10 9.3230 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>./course.material</uri>
+              <name>stop</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="hill_2">
+      <pose>92.33 -70.17 1.26 0 0 0</pose>
+      <static>1</static>
+      <link name="cube_link">
+        <collision name="cube_coll">
+          <geometry>
+            <box>
+              <size>5 9.3230 1</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name="cube_vis">
+          <geometry>
+            <box>
+              <size>5 9.3230 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>./course.material</uri>
+              <name>line</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="hill_3">
+      <pose>99.66 -70.17 0.4 0 0.1747 0</pose>
+      <static>1</static>
+      <link name="cube_link">
+        <collision name="cube_coll">
+          <geometry>
+            <box>
+              <size>10 9.3230 1</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name="cube_vis">
+          <geometry>
+            <box>
+              <size>10 9.3230 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>./course.material</uri>
+              <name>line</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>-19.9 -75.97 38.248848 0 0.5338 0.476</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+
+
+  </world>
+</sdf>
+
+

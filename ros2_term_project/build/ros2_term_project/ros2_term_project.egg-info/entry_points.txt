@@ -1,0 +1,6 @@
+[console_scripts]
+line_follower = ros2_term_project.line_follower:main
+move_box = ros2_term_project.move_box:main
+spawn_prius = ros2_term_project.spawn_prius:main
+start = ros2_term_project.start_car:main
+
