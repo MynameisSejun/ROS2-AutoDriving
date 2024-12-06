@@ -24,7 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'start = ros2_term_project.start_car:main',
+            'starter = ros2_term_project.get_car:main',
             'spawn_prius = ros2_term_project.spawn_prius:main',
             'line_follower = ros2_term_project.line_follower:main',
             'move_box = ros2_term_project.move_box:main',

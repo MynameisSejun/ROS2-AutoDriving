@@ -30,11 +30,11 @@
       </inertial>
 
       <pose>0 -2 0.8 0 0.1 -1.57</pose>
-      <sensor name="camera2" type="camera">
+      <sensor name="camera_PR002" type="camera">
         <always_on>true</always_on>
         <visualize>true</visualize>
         <update_rate>10</update_rate>
-        <topic>camera</topic>
+        <topic>camera2</topic>
         <camera name="picam">
           <horizontal_fov>1.085595</horizontal_fov>
           <image>
@@ -52,7 +52,7 @@
             <stddev>0.007</stddev>
           </noise>
         </camera>
-            <plugin name="camera_driver2" filename="libgazebo_ros_camera.so">
+            <plugin name="camera_driver_PR002" filename="libgazebo_ros_camera.so">
             </plugin>
       </sensor>
     </link>
@@ -101,7 +101,7 @@
 			</mesh>
 		</geometry>
 	</visual>
-	<sensor name="custom_laser_sensor" type="gpu_ray"> <!-- sensor 이름 변경 -->
+	<sensor name="custom_laser_sensor_PR002" type="gpu_ray"> <!-- sensor 이름 변경 -->
 		<pose>0.01 0 0.0175 0 -0 0</pose>
 		<ray>
 			<scan>
@@ -118,13 +118,13 @@
 				<resolution>0.2</resolution>
 			</range>
 		</ray>
-		<plugin name="custom_laser_plugin" filename="libgazebo_ros_ray_sensor.so"> <!-- plugin 이름 변경 -->
+		<plugin name="custom_laser_plugin_PR002" filename="libgazebo_ros_ray_sensor.so"> <!-- plugin 이름 변경 -->
 			<ros>
-				<namespace>custom_laser_namespace</namespace> <!-- namespace 이름 변경 -->
-			    <remapping>~/out:=scan_custom</remapping> <!-- 토픽 remapping 변경 -->
+				<namespace>PR002</namespace> <!-- namespace 이름 변경 -->
+			    <remapping>~/out:=scan_PR002</remapping> <!-- 토픽 remapping 변경 -->
 				<remapping>camera_info:=camera_info_custom</remapping> <!-- 토픽 remapping 변경 -->
 			</ros>
-			<frame_name>custom_laser_frame</frame_name> <!-- frame 이름 변경 -->
+			<frame_name>custom_laser_frame_PR002</frame_name> <!-- frame 이름 변경 -->
 			<output_type>sensor_msgs/LaserScan</output_type>
 		</plugin>
 		<always_on>1</always_on>
@@ -132,34 +132,63 @@
 		<visualize>1</visualize>
 	</sensor>
 </link>
-    <plugin name='diff_drive2' filename='libgazebo_ros_ackermann_drive.so'>
 
+<joint name="custom_hokuyo_joint" type="revolute"> <!-- joint 이름 변경 -->
+	<parent>chassis</parent>
+	<child>hokuyo_link</child>
+	<axis>
+		<xyz>0 1 0</xyz>
+		<limit>
+			<upper>0</upper>
+			<lower>0</lower>
+		</limit>
+	</axis>
+</joint>
+
+
+    <plugin name='diff_drive_PR2' filename='libgazebo_ros_ackermann_drive.so'>
         <ros>
-          <namespace>/PR002</namespace>
-          <remapping>cmd_vel:=cmd_demo0</remapping>
-          <remapping>odom:=odom_demo</remapping>
+            <namespace>PR002</namespace>
+            <remapping>cmd_vel:=cmd_demo_PR002</remapping>
+            <remapping>odom:=odom_demo_PR002</remapping>
         </ros>
 
-      <!-- wheels -->
-      <left_joint>rear_left_wheel_joint</left_joint>
-      <right_joint>rear_right_wheel_joint</right_joint>
+        <update_rate>100.0</update_rate>
 
-      <!-- kinematics -->
-      <wheel_separation>1.25</wheel_separation>
-      <wheel_diameter>0.6</wheel_diameter>
+        <front_left_joint>front_left_combined_joint</front_left_joint>
+        <front_right_joint>front_right_combined_joint</front_right_joint>
+        <rear_left_joint>rear_left_wheel_joint</rear_left_joint>
+        <rear_right_joint>rear_right_wheel_joint</rear_right_joint>
+        <left_steering_joint>front_left_combined_joint</left_steering_joint>
+        <right_steering_joint>front_right_combined_joint</right_steering_joint>
+        <steering_wheel_joint>steering_joint</steering_wheel_joint>
 
-      <!-- limits -->
-      <max_wheel_torque>20</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+        <!-- Max absolute steer angle for tyre in radians-->
+        <!-- Any cmd_vel angular z greater than this would be capped -->
+        <max_steer>0.6458</max_steer>
 
-      <!-- output -->
-      <publish_odom>true</publish_odom>
-      <publish_odom_tf>true</publish_odom_tf>
-      <publish_wheel_tf>true</publish_wheel_tf>
+        <!-- Max absolute steering angle of steering wheel -->
+        <max_steering_angle>7.85</max_steering_angle>
 
-      <odometry_frame>odom_demo</odometry_frame>
-      <robot_base_frame>chassis</robot_base_frame>
+        <!-- Max absolute linear speed in m/s -->
+        <max_speed>6</max_speed>
 
+        <!-- PID tuning -->
+        <left_steering_pid_gain>1500 0 1</left_steering_pid_gain>
+        <left_steering_i_range>0 0</left_steering_i_range>
+        <right_steering_pid_gain>1500 0 1</right_steering_pid_gain>
+        <right_steering_i_range>0 0</right_steering_i_range>
+        <linear_velocity_pid_gain>1000 0 1</linear_velocity_pid_gain>
+        <linear_velocity_i_range>0 0</linear_velocity_i_range>
+
+        <!-- output -->
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <publish_wheel_tf>true</publish_wheel_tf>
+        <publish_distance>true</publish_distance>
+
+        <odometry_frame>odom_demo</odometry_frame>
+        <robot_base_frame>chassis</robot_base_frame>
     </plugin>
     <!-- end camera -->
 

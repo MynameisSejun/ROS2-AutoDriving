@@ -30,11 +30,11 @@
       </inertial>
 
       <pose>0 -2 0.8 0 0.1 -1.57</pose>
-      <sensor name="camera1" type="camera">
+      <sensor name="camera_PR001" type="camera">
         <always_on>true</always_on>
         <visualize>true</visualize>
         <update_rate>10</update_rate>
-        <topic>camera</topic>
+        <topic>camera1</topic>
         <camera name="picam">
           <horizontal_fov>1.085595</horizontal_fov>
           <image>
@@ -52,8 +52,10 @@
             <stddev>0.007</stddev>
           </noise>
         </camera>
-            <plugin name="camera_driver1" filename="libgazebo_ros_camera.so">
-            
+            <plugin name="camera_driver_PR001" filename="libgazebo_ros_camera.so">
+                <ros>
+                    <namespace>/PR001</namespace>
+                </ros>
             </plugin>
       </sensor>
     </link>
@@ -102,7 +104,7 @@
 			</mesh>
 		</geometry>
 	</visual>
-	<sensor name="custom_laser_sensor" type="gpu_ray"> <!-- sensor 이름 변경 -->
+	<sensor name="custom_laser_sensor_PR001" type="gpu_ray"> <!-- sensor 이름 변경 -->
 		<pose>0.01 0 0.0175 0 -0 0</pose>
 		<ray>
 			<scan>
@@ -119,13 +121,13 @@
 				<resolution>0.2</resolution>
 			</range>
 		</ray>
-		<plugin name="custom_laser_plugin" filename="libgazebo_ros_ray_sensor.so"> <!-- plugin 이름 변경 -->
+		<plugin name="custom_laser_plugin_PR001" filename="libgazebo_ros_ray_sensor.so"> <!-- plugin 이름 변경 -->
 			<ros>
-				<namespace>custom_laser_namespace</namespace> <!-- namespace 이름 변경 -->
-			    <remapping>~/out:=scan_custom</remapping> <!-- 토픽 remapping 변경 -->
+				<namespace>PR001</namespace> <!-- namespace 이름 변경 -->
+			    <remapping>~/out:=scan_PR001</remapping> <!-- 토픽 remapping 변경 -->
 				<remapping>camera_info:=camera_info_custom</remapping> <!-- 토픽 remapping 변경 -->
 			</ros>
-			<frame_name>custom_laser_frame</frame_name> <!-- frame 이름 변경 -->
+			<frame_name>custom_laser_frame_PR001</frame_name> <!-- frame 이름 변경 -->
 			<output_type>sensor_msgs/LaserScan</output_type>
 		</plugin>
 		<always_on>1</always_on>
@@ -147,11 +149,11 @@
 </joint>
 
 
-    <plugin name='diff_drive1' filename='libgazebo_ros_ackermann_drive.so'>
+    <plugin name='diff_drive_PR001' filename='libgazebo_ros_ackermann_drive.so'>
         <ros>
-            <namespace>/PR001</namespace>
-            <remapping>cmd_vel:=cmd_demo</remapping>
-            <remapping>odom:=odom_demo</remapping>
+            <namespace>/PR001</namespace> <!-- 네임스페이스 수정 -->
+            <remapping>cmd_vel:=cmd_demo_PR001</remapping> <!-- cmd_vel 토픽 이름 수정 -->
+            <remapping>odom:=odom_demo_PR001</remapping> <!-- odom 토픽 이름 수정 -->
         </ros>
 
         <update_rate>100.0</update_rate>

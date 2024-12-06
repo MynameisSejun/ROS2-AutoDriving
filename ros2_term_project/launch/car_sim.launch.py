@@ -31,6 +31,8 @@ ld = LaunchDescription()
 
 
 def generate_launch_description():
+    car = "PR002" # select move car name
+
     # configuration
     world = LaunchConfiguration('world')
     print('world =', world)
@@ -47,6 +49,14 @@ def generate_launch_description():
     gazebo_run = ExecuteProcess(
         cmd=['gazebo', '-s', 'libgazebo_ros_factory.so', world],
         output='screen')
+
+    starter = Node(
+        package='ros2_term_project',
+        executable='starter',
+        name='start_car',
+        arguments=[car],
+        output='screen'
+    )
 
     line_follower = Node(
         package='ros2_term_project',
@@ -74,6 +84,7 @@ def generate_launch_description():
     ld.add_action(spawn_prius)
     ld.add_action(line_follower)
     ld.add_action(move_box_node)
+    #ld.add_action(starter)
 
     # spawn prius_hybrid
 

@@ -47,12 +47,12 @@ def main(args=None):
     sdf_path2 = os.path.join(package_share_directory, 'worlds', 'model2.sdf')
 
     # PR001 자동차 소환
-    future1 = spawner.spawn('PR001', sdf_path, 91.0, -11.7, -1.57)
+    future1 = spawner.spawn('PR001', sdf_path, 93.0, -11.9, -1.57)
     rclpy.spin_until_future_complete(spawner, future1)
     if future1.result() is not None:
-        spawner.get_logger().info('Successfully spawned PR001!')
+       spawner.get_logger().info('Successfully spawned PR001!')
     else:
-        spawner.get_logger().info('Failed to spawn PR001.')
+       spawner.get_logger().info('Failed to spawn PR001.')
 
     # PR002 자동차 소환
     future2 = spawner.spawn('PR002', sdf_path2, 93.0, -15.9, -1.57)
